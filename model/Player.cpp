@@ -8,7 +8,7 @@
 #include <iostream>
 
 Player::Player() {
-    if (!texture.loadFromFile("assets/player.png")) {
+    if (!texture.loadFromFile("../model/assets/player.png")) {
         // Handle error: e.g., print or throw
         std::cerr << "Failed to load player texture\n";
     }

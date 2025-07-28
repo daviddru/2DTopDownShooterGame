@@ -14,7 +14,7 @@ int main() {
     sf::Clock shootClock;
 
     sf::Texture bulletTexture;
-    if (!bulletTexture.loadFromFile("assets/bullet.png")) {
+    if (!bulletTexture.loadFromFile("../model/assets/bullet.png")) {
         std::cerr << "Failed to load bullet texture\n";
         return 1;
     }
