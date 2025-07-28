@@ -15,7 +15,7 @@ Player::Player() {
 
     sprite.setTexture(texture);
     sprite.setScale(sf::Vector2f(0.5, 0.5));
-    sprite.setOrigin(150.f, 100.f);  // Center origin for rotation
+    sprite.setOrigin(95.f, 152.f);  // Center origin for rotation
     sprite.setPosition(640.f, 360.f);
 
     speed = 300.f;

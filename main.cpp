@@ -2,6 +2,7 @@
 #include "model/Player.h"
 #include "model/Bullet.h"
 #include <iostream>
+#include <cmath>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Twin Stick Shooter");
@@ -37,7 +38,10 @@ int main() {
                 sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                 sf::Vector2f direction = mousePos - playerPos;
 
-                bullets.emplace_back(playerPos, direction, 800.f, bulletTexture);
+                float muzzleLength = 186.f/2;
+                sf::Vector2f bulletSpawn = playerPos + direction * (muzzleLength / std::sqrt(direction.x * direction.x + direction.y * direction.y));
+
+                bullets.emplace_back(bulletSpawn, direction, 800.f, bulletTexture);
                 shootClock.restart();
             }
         }
