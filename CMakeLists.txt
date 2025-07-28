@@ -10,7 +10,9 @@ find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
 add_executable(TwinStickShooter main.cpp
         model/Player.cpp
-        model/Player.h)
+        model/Player.h
+        model/Bullet.cpp
+        model/Bullet.h)
 
 # Add include dir and link SFML
 target_include_directories(TwinStickShooter PRIVATE "D:/Libraries/SFML-2.6.1/include")

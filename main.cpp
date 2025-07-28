@@ -2,7 +2,7 @@
 #include "model/Player.h"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Twin Stick Shooter");
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Twin Stick Shooter");
     window.setFramerateLimit(60);
 
     Player player;
@@ -17,8 +17,8 @@ int main() {
                 window.close();
         }
 
-        player.handleInput(deltaTime);
-        // player.update(deltaTime);
+        // player.handleInput(deltaTime);
+        player.update(window, deltaTime);
 
 
         window.clear(sf::Color::Black);

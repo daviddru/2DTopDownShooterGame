@@ -11,7 +11,9 @@
 
 class Player {
 private:
-    sf::CircleShape shape;
+    sf::Texture texture;
+    sf::Sprite sprite;
+
     float speed;
 
 public:
@@ -19,7 +21,8 @@ public:
 
     void handleInput(float deltaTime);
     void draw(sf::RenderWindow &window);
-    void update(float deltaTime);
+    void update(sf::RenderWindow& window, float deltaTime);
+
 
     sf::Vector2f getPosition() const;
 };

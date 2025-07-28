@@ -5,11 +5,18 @@
 #include "Player.h"
 
 #include <cmath>
+#include <iostream>
 
 Player::Player() {
-    shape.setRadius(25.f);
-    shape.setOrigin(shape.getRadius(), shape.getRadius());
-    shape.setPosition(640.f, 360.f);
+    if (!texture.loadFromFile("assets/player.png")) {
+        // Handle error: e.g., print or throw
+        std::cerr << "Failed to load player texture\n";
+    }
+
+    sprite.setTexture(texture);
+    sprite.setScale(sf::Vector2f(0.5, 0.5));
+    sprite.setOrigin(150.f, 100.f);  // Center origin for rotation
+    sprite.setPosition(640.f, 360.f);
 
     speed = 300.f;
 }
@@ -27,14 +34,33 @@ void Player::handleInput(float deltaTime) {
         movement /= len;
     }
 
-    shape.move(movement * speed * deltaTime);
+    sprite.move(movement * speed * deltaTime);
 }
 
 void Player::draw(sf::RenderWindow &window) {
-    window.draw(shape);
+    window.draw(sprite);
 }
 
 sf::Vector2f Player::getPosition() const {
-    return shape.getPosition();
+    return sprite.getPosition();
 }
+
+void Player::update(sf::RenderWindow& window, float deltaTime) {
+    handleInput(deltaTime);
+
+    sf::Vector2f playerPos = sprite.getPosition();
+
+    sf::Vector2i mousePixelPos = sf::Mouse::getPosition(window);
+    sf::Vector2f mouseWorldPos = window.mapPixelToCoords(mousePixelPos);
+
+    // Direction from player to mouse
+    sf::Vector2f direction = mouseWorldPos - playerPos;
+
+    // Angle of the direction
+    float angle = std::atan2(direction.y, direction.x) * 180.f / 3.14159f;
+
+    // Set rotation (+90 if the shape initially faces up)
+    sprite.setRotation(angle);
+}
+
 
