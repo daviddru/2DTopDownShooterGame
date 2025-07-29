@@ -18,6 +18,12 @@ void Enemy::update(const sf::Vector2f& playerPosition, float deltaTime) {
     float length = std::sqrt(dir.x * dir.x + dir.y * dir.y);
     if (length != 0) dir /= length;
 
+    // Angle of the direction
+    float angle = std::atan2(dir.y, dir.x) * 180.f / 3.14159f;
+
+    // Set rotation (+90 if the shape initially faces up)
+    sprite.setRotation(angle);
+
     sprite.move(dir * speed * deltaTime);
 }
 
