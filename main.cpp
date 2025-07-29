@@ -2,6 +2,7 @@
 #include "model/Player.h"
 #include "model/Bullet.h"
 #include "model/SoundManager.h"
+#include "model/Enemy.h"
 #include <iostream>
 #include <cmath>
 
@@ -15,9 +16,18 @@ int main() {
     std::vector<Bullet> bullets;
     sf::Clock shootClock;
 
+    std::vector<Enemy> enemies;
+    sf::Clock enemySpawnClock;
+
     sf::Texture bulletTexture;
     if (!bulletTexture.loadFromFile("../model/assets/bullet.png")) {
         std::cerr << "Failed to load bullet texture\n";
+        return 1;
+    }
+
+    sf::Texture enemyTexture;
+    if (!enemyTexture.loadFromFile("../model/assets/enemy.png")) {
+        std::cerr << "Failed to load enemy texture\n";
         return 1;
     }
 
@@ -32,9 +42,10 @@ int main() {
                 window.close();
         }
 
-
+        // Update player
         player.update(window, deltaTime);
 
+        // Update shooting
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
             if (shootClock.getElapsedTime().asSeconds() > 0.4f) { // rate limit
                 sf::Vector2f playerPos = player.getPosition();
@@ -49,19 +60,38 @@ int main() {
                 shootClock.restart();
             }
         }
+
+        // Update bullets
         for (auto& bullet : bullets) {
             bullet.update(deltaTime);
         }
 
+        // Spawn and update enemies
+        if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
+            sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
+            enemies.emplace_back(spawnPos, enemyTexture);
+            enemySpawnClock.restart();
+        }
+        for (auto& enemy : enemies) {
+            enemy.update(player.getCenter(), deltaTime);
+        }
+
+        // Delete out of bound bullets
         bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
     [&](const Bullet& b) { return b.isOffScreen(window); }),
     bullets.end());
 
         window.clear(sf::Color::Black);
 
+        // Draw elements
         player.draw(window);
+
         for (auto& bullet : bullets) {
             bullet.draw(window);
+        }
+
+        for (const auto& enemy : enemies) {
+            enemy.draw(window);
         }
 
         window.display();

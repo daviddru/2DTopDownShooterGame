@@ -63,4 +63,9 @@ void Player::update(sf::RenderWindow& window, float deltaTime) {
     sprite.setRotation(angle);
 }
 
-
+sf::Vector2f Player::getCenter() const {
+    sf::Vector2f center = sprite.getPosition();
+    center.x += 20;
+    center.y -= 20;
+    return center;
+}
