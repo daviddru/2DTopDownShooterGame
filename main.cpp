@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include "model/Player.h"
 #include "model/Bullet.h"
+#include "model/SoundManager.h"
 #include <iostream>
 #include <cmath>
 
@@ -20,6 +21,8 @@ int main() {
         return 1;
     }
 
+    SoundManager::getInstance().loadSound("shoot", "../model/assets/sounds/shoot.wav");
+
     while (window.isOpen()) {
         float deltaTime = clock.restart().asSeconds();
 
@@ -33,7 +36,7 @@ int main() {
         player.update(window, deltaTime);
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (shootClock.getElapsedTime().asSeconds() > 0.15f) { // rate limit
+            if (shootClock.getElapsedTime().asSeconds() > 0.3f) { // rate limit
                 sf::Vector2f playerPos = player.getPosition();
                 sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
                 sf::Vector2f direction = mousePos - playerPos;
@@ -42,6 +45,7 @@ int main() {
                 sf::Vector2f bulletSpawn = playerPos + direction * (muzzleLength / std::sqrt(direction.x * direction.x + direction.y * direction.y));
 
                 bullets.emplace_back(bulletSpawn, direction, 800.f, bulletTexture);
+                SoundManager::getInstance().playSound("shoot");
                 shootClock.restart();
             }
         }
@@ -54,11 +58,15 @@ int main() {
     bullets.end());
 
         window.clear(sf::Color::Black);
+
         player.draw(window);
         for (auto& bullet : bullets) {
             bullet.draw(window);
         }
+
         window.display();
+
+        SoundManager::getInstance().cleanup();
     }
 
 
