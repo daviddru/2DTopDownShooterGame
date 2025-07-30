@@ -2,7 +2,7 @@
 #include "model/Player.h"
 #include "model/Bullet.h"
 #include "model/SoundManager.h"
-#include "model/Enemy.h"
+#include "model/Zombie.h"
 #include <iostream>
 #include <cmath>
 
@@ -16,7 +16,7 @@ int main() {
     std::vector<Bullet> bullets;
     sf::Clock shootClock;
 
-    std::vector<Enemy> enemies;
+    std::vector<Zombie> enemies;
     sf::Clock enemySpawnClock;
 
     sf::Texture bulletTexture;
@@ -61,19 +61,11 @@ int main() {
             }
         }
 
-        // Update bullets
-        for (auto& bullet : bullets) {
-            bullet.update(deltaTime);
-        }
-
-        // Spawn and update enemies
+        // Spawn enemies
         if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
             sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
             enemies.emplace_back(spawnPos, enemyTexture);
             enemySpawnClock.restart();
-        }
-        for (auto& enemy : enemies) {
-            enemy.update(player.getCenter(), deltaTime);
         }
 
         // Delete out of bound bullets
@@ -83,16 +75,20 @@ int main() {
 
         window.clear(sf::Color::Black);
 
-        // Draw elements
-        player.draw(window);
-
+        // Update and draw bullets
         for (auto& bullet : bullets) {
+            bullet.update(deltaTime);
             bullet.draw(window);
         }
 
-        for (const auto& enemy : enemies) {
+        // Update and draw enemies
+        for (auto& enemy : enemies) {
+            enemy.update(player.getCenter(), deltaTime);
             enemy.draw(window);
         }
+
+        // Draw elements
+        player.draw(window);
 
         window.display();
 

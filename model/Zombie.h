@@ -7,19 +7,19 @@
 
 #include <SFML/Graphics.hpp>
 
-class Enemy {
+class Zombie {
 private:
     sf::Sprite sprite;
     float speed = 100.f;
-    bool alive = true;
+    float radius = 30.f;
 
 public:
-    Enemy(sf::Vector2f position, const sf::Texture& texture);
+    Zombie(sf::Vector2f position, const sf::Texture& texture);
 
     void update(const sf::Vector2f& playerPosition, float deltaTime);
     void draw(sf::RenderWindow& window) const;
-    bool isHit(const sf::FloatRect& bulletBounds) const;
-    bool isAlive() const;
+    sf::Vector2f getPosition() const;
+    float getRadius() const;
     sf::FloatRect getBounds() const;
 };
 
