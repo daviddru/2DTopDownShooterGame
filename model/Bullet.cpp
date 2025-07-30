@@ -30,3 +30,7 @@ bool Bullet::isOffScreen(const sf::RenderWindow& window) const {
     sf::Vector2f pos = sprite.getPosition();
     return pos.x < 0 || pos.y < 0 || pos.x > window.getSize().x || pos.y > window.getSize().y;
 }
+
+sf::FloatRect Bullet::getBounds() const {
+    return sprite.getGlobalBounds();
+}

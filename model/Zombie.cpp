@@ -43,3 +43,7 @@ sf::Vector2f Zombie::getPosition() const {
 float Zombie::getRadius() const {
     return radius;
 }
+
+sf::FloatRect Zombie::getBounds() const {
+    return sprite.getGlobalBounds();
+}

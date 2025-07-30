@@ -69,6 +69,16 @@ int main() {
                 window.close();
         }
 
+        // Spawn enemies
+        if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
+            sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
+            if (enemiesCount < 20) {
+                enemies.emplace_back(spawnPos, enemyTexture);
+                enemiesCount++;
+            }
+            enemySpawnClock.restart();
+        }
+
         // Update player
         player.update(window, deltaTime);
 
@@ -88,14 +98,37 @@ int main() {
             }
         }
 
-        // Spawn enemies
-        if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
-            sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
-            if (enemiesCount < 20) {
-                enemies.emplace_back(spawnPos, enemyTexture);
-                enemiesCount++;
+        // Update bullets
+        for (auto& bullet : bullets) {
+            bullet.update(deltaTime);
+        }
+
+        // Update enemies
+        for (auto& enemy : enemies) {
+            applyZombieSeparation(enemies, deltaTime);
+            enemy.update(player.getCenter(), deltaTime);
+        }
+
+        // Check for collisions
+        for (auto bulletIt = bullets.begin(); bulletIt != bullets.end(); ) {
+            bool bulletRemoved = false;
+            for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ) {
+                if (bulletIt->getBounds().intersects(enemyIt->getBounds())) {
+                    // Remove bullet
+                    bulletIt = bullets.erase(bulletIt);
+                    bulletRemoved = true;
+
+                    // Remove enemy (or call enemy.takeDamage() if you want health)
+                    enemyIt = enemies.erase(enemyIt);
+
+                    break; // bullet is gone, stop checking enemies for this bullet
+                } else {
+                    ++enemyIt;
+                }
             }
-            enemySpawnClock.restart();
+            if (!bulletRemoved) {
+                ++bulletIt;
+            }
         }
 
         // Delete out of bound bullets
@@ -105,16 +138,13 @@ int main() {
 
         window.clear(sf::Color::Black);
 
-        // Update and draw bullets
+        // Draw bullets
         for (auto& bullet : bullets) {
-            bullet.update(deltaTime);
             bullet.draw(window);
         }
 
-        // Update and draw enemies
+        // Draw enemies
         for (auto& enemy : enemies) {
-            applyZombieSeparation(enemies, deltaTime);
-            enemy.update(player.getCenter(), deltaTime);
             enemy.draw(window);
         }
 

@@ -18,6 +18,7 @@ public:
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
     bool isOffScreen(const sf::RenderWindow& window) const;
+    sf::FloatRect getBounds() const;
 };
 
 
