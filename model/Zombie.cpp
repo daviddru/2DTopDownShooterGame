@@ -12,13 +12,17 @@ Zombie::Zombie(sf::Vector2f position, const sf::Texture& texture) {
     sprite.setOrigin(texture.getSize().x / 2, texture.getSize().y / 2);
 }
 
+void Zombie::move(const sf::Vector2f& offset, float deltaTime) {
+    sprite.move(offset * deltaTime);
+}
 
 void Zombie::update(const sf::Vector2f& playerPosition, float deltaTime) {
     sf::Vector2f pos = sprite.getPosition();
     sf::Vector2f toPlayer = playerPosition - pos;
 
     float dist = std::sqrt(toPlayer.x * toPlayer.x + toPlayer.y * toPlayer.y);
-    float stopDistance = radius + 30.f; // 30.f is the player radius
+    float playerRadius = 30.f;
+    float stopDistance = radius + playerRadius;
 
     if (dist > stopDistance) {
         sf::Vector2f dir = toPlayer / dist;

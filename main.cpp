@@ -6,6 +6,32 @@
 #include <iostream>
 #include <cmath>
 
+
+void applyZombieSeparation(std::vector<Zombie>& zombies, float deltaTime) {
+    float separationRadius = 50.f;
+    float pushStrength = 100.f;
+
+    for (size_t i = 0; i < zombies.size(); ++i) {
+        for (size_t j = i + 1; j < zombies.size(); ++j) {
+            sf::Vector2f posA = zombies[i].getPosition();
+            sf::Vector2f posB = zombies[j].getPosition();
+
+            sf::Vector2f delta = posA - posB;
+            float distance = std::sqrt(delta.x * delta.x + delta.y * delta.y);
+
+            if (distance < separationRadius && distance > 0.01f) {
+                sf::Vector2f pushDir = delta / distance;
+                float overlap = separationRadius - distance;
+                sf::Vector2f push = pushDir * overlap * pushStrength;
+
+                zombies[i].move(push * 0.5f, deltaTime);
+                zombies[j].move(-push * 0.5f, deltaTime);
+            }
+        }
+    }
+}
+
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Twin Stick Shooter");
     window.setFramerateLimit(60);
@@ -17,6 +43,7 @@ int main() {
     sf::Clock shootClock;
 
     std::vector<Zombie> enemies;
+    int enemiesCount = 0;
     sf::Clock enemySpawnClock;
 
     sf::Texture bulletTexture;
@@ -64,7 +91,10 @@ int main() {
         // Spawn enemies
         if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
             sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
-            enemies.emplace_back(spawnPos, enemyTexture);
+            if (enemiesCount < 20) {
+                enemies.emplace_back(spawnPos, enemyTexture);
+                enemiesCount++;
+            }
             enemySpawnClock.restart();
         }
 
@@ -83,6 +113,7 @@ int main() {
 
         // Update and draw enemies
         for (auto& enemy : enemies) {
+            applyZombieSeparation(enemies, deltaTime);
             enemy.update(player.getCenter(), deltaTime);
             enemy.draw(window);
         }

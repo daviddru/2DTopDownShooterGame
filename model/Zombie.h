@@ -21,6 +21,7 @@ public:
     sf::Vector2f getPosition() const;
     float getRadius() const;
     sf::FloatRect getBounds() const;
+    void move(const sf::Vector2f& offset, float deltaTime);
 };
 
 #endif //ENEMY_H
