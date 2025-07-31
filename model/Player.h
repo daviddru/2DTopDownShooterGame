@@ -15,6 +15,8 @@ private:
     sf::Sprite sprite;
 
     float speed;
+    int maxHealth = 100.f;
+    int currentHealth = 100.f;
 
 public:
     Player();
@@ -22,10 +24,13 @@ public:
     void handleInput(float deltaTime);
     void draw(sf::RenderWindow &window);
     void update(sf::RenderWindow& window, float deltaTime);
+    void takeDamage(int damage);
 
 
     sf::Vector2f getPosition() const;
     sf::Vector2f getCenter() const;
+    int getHealth() const;
+    int getMaxHealth() const;
 };
 
 

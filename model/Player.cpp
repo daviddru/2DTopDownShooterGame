@@ -69,3 +69,15 @@ sf::Vector2f Player::getCenter() const {
     center.y -= 20;
     return center;
 }
+
+void Player::takeDamage(int damage) {
+    currentHealth -= damage;
+    if (currentHealth < 0) currentHealth = 0;
+}
+
+int Player::getHealth() const {
+    return currentHealth;
+}
+int Player::getMaxHealth() const {
+    return maxHealth;
+}

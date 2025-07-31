@@ -20,7 +20,9 @@ add_executable(TwinStickShooter main.cpp
         model/Particle.cpp
         model/Particle.h
         model/ParticleSystem.cpp
-        model/ParticleSystem.h)
+        model/ParticleSystem.h
+        model/GUI.cpp
+        model/GUI.h)
 
 # Add include dir and link SFML
 target_include_directories(TwinStickShooter PRIVATE "D:/Libraries/SFML-2.6.1/include")

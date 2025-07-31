@@ -4,6 +4,7 @@
 #include "model/SoundManager.h"
 #include "model/Zombie.h"
 #include "model/ParticleSystem.h"
+#include "model/GUI.h"
 #include <iostream>
 #include <cmath>
 
@@ -36,6 +37,8 @@ void applyZombieSeparation(std::vector<Zombie>& zombies, float deltaTime) {
 int main() {
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "Twin Stick Shooter");
     window.setFramerateLimit(60);
+
+    GUI gui;
 
     Player player;
     sf::Clock clock;
@@ -82,6 +85,9 @@ int main() {
             enemySpawnClock.restart();
         }
 
+        // Update GUI
+        gui.update(player.getHealth(), player.getMaxHealth());
+
         // Update player
         player.update(window, deltaTime);
 
@@ -109,6 +115,20 @@ int main() {
         // Update enemies
         for (auto& enemy : enemies) {
             applyZombieSeparation(enemies, deltaTime);
+
+            // Damage logic
+            sf::Vector2f enemyPos = enemy.getPosition();
+            sf::Vector2f playerPos = player.getPosition();
+            float dist = std::hypot(enemyPos.x - playerPos.x, enemyPos.y - playerPos.y);
+
+            if (dist < 65.f) {
+                static sf::Clock damageClock;
+                if (damageClock.getElapsedTime().asSeconds() > 1.f) {
+                    player.takeDamage(20);
+                    damageClock.restart();
+                }
+            }
+
             enemy.update(player.getCenter(), deltaTime);
         }
 
@@ -148,6 +168,9 @@ int main() {
     bullets.end());
 
         window.clear(sf::Color::Black);
+
+        // Draw GUI
+        gui.draw(window);
 
         // Draw bullets
         for (auto& bullet : bullets) {
