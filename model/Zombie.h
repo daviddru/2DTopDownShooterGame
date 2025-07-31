@@ -10,6 +10,7 @@
 class Zombie {
 private:
     sf::Sprite sprite;
+    float health = 100.f;
     float speed = 100.f;
     float radius = 30.f;
     sf::FloatRect hitbox;
@@ -25,6 +26,12 @@ public:
     sf::FloatRect getBounds() const;
     const sf::FloatRect& getHitbox() const;
     void move(const sf::Vector2f& offset, float deltaTime);
+
+    void takeDamage(float damage);
+    bool isDead() const;
+    float getHealth() const;
+
+    void drawHealth(sf::RenderWindow& window) const;
 };
 
 #endif //ENEMY_H

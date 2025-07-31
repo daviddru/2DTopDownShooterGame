@@ -45,6 +45,7 @@ void Zombie::update(const sf::Vector2f& playerPosition, float deltaTime) {
 }
 
 void Zombie::draw(sf::RenderWindow& window) const {
+    drawHealth(window);
     window.draw(sprite);
 }
 
@@ -62,4 +63,31 @@ sf::FloatRect Zombie::getBounds() const {
 
 const sf::FloatRect& Zombie::getHitbox() const {
     return hitbox;
+}
+
+void Zombie::takeDamage(float damage) {
+    health -= damage;
+}
+
+bool Zombie::isDead() const {
+    return health <= 0;
+}
+
+float Zombie::getHealth() const {
+    return health;
+}
+
+void Zombie::drawHealth(sf::RenderWindow& window) const {
+    // Health bar background
+    sf::RectangleShape back(sf::Vector2f(40, 5));
+    back.setFillColor(sf::Color(50, 50, 50));
+    back.setPosition(sprite.getPosition().x - 20, sprite.getPosition().y - 50);
+
+    // Health bar foreground
+    sf::RectangleShape bar(sf::Vector2f(40 * (health / 100.f), 5));
+    bar.setFillColor(sf::Color::Red);
+    bar.setPosition(sprite.getPosition().x - 20, sprite.getPosition().y - 50);
+
+    window.draw(back);
+    window.draw(bar);
 }

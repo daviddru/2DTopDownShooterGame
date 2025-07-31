@@ -114,14 +114,18 @@ int main() {
             bool bulletRemoved = false;
             for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ) {
                 if (bulletIt->getHitbox().intersects(enemyIt->getHitbox())) {
+                    enemyIt->takeDamage(34.f);
+
                     // Remove bullet
                     bulletIt = bullets.erase(bulletIt);
                     bulletRemoved = true;
 
-                    // Remove enemy (or call enemy.takeDamage() if you want health)
-                    enemyIt = enemies.erase(enemyIt);
-
-                    break; // bullet is gone, stop checking enemies for this bullet
+                    if (enemyIt->isDead()) {
+                        enemyIt = enemies.erase(enemyIt); // remove dead zombie
+                        enemiesCount--;
+                    } else {
+                        ++enemyIt;
+                    }
                 } else {
                     ++enemyIt;
                 }
