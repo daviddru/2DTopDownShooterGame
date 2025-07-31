@@ -113,7 +113,7 @@ int main() {
         for (auto bulletIt = bullets.begin(); bulletIt != bullets.end(); ) {
             bool bulletRemoved = false;
             for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ) {
-                if (bulletIt->getBounds().intersects(enemyIt->getBounds())) {
+                if (bulletIt->getHitbox().intersects(enemyIt->getHitbox())) {
                     // Remove bullet
                     bulletIt = bullets.erase(bulletIt);
                     bulletRemoved = true;

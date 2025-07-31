@@ -18,8 +18,19 @@ Bullet::Bullet(sf::Vector2f position, sf::Vector2f direction, float speed, const
     velocity = (len != 0) ? direction / len * speed : sf::Vector2f(0.f, 0.f);
 }
 
+void Bullet::updateHitbox() {
+    sf::FloatRect bounds = sprite.getGlobalBounds();
+    float scale = 0.1f;
+    float newWidth = bounds.width * scale;
+    float newHeight = bounds.height * scale;
+    float offsetX = (bounds.width - newWidth) / 2.f;
+    float offsetY = (bounds.height - newHeight) / 2.f;
+    hitbox = sf::FloatRect(bounds.left + offsetX, bounds.top + offsetY, newWidth, newHeight);
+}
+
 void Bullet::update(float deltaTime) {
     sprite.move(velocity * deltaTime);
+    updateHitbox();
 }
 
 void Bullet::draw(sf::RenderWindow& window) {
@@ -33,4 +44,8 @@ bool Bullet::isOffScreen(const sf::RenderWindow& window) const {
 
 sf::FloatRect Bullet::getBounds() const {
     return sprite.getGlobalBounds();
+}
+
+const sf::FloatRect& Bullet::getHitbox() const {
+    return hitbox;
 }
