@@ -16,7 +16,11 @@ add_executable(TwinStickShooter main.cpp
         model/SoundManager.cpp
         model/SoundManager.h
         model/Zombie.cpp
-        model/Zombie.h)
+        model/Zombie.h
+        model/Particle.cpp
+        model/Particle.h
+        model/ParticleSystem.cpp
+        model/ParticleSystem.h)
 
 # Add include dir and link SFML
 target_include_directories(TwinStickShooter PRIVATE "D:/Libraries/SFML-2.6.1/include")

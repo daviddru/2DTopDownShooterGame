@@ -3,6 +3,7 @@
 #include "model/Bullet.h"
 #include "model/SoundManager.h"
 #include "model/Zombie.h"
+#include "model/ParticleSystem.h"
 #include <iostream>
 #include <cmath>
 
@@ -45,6 +46,8 @@ int main() {
     std::vector<Zombie> enemies;
     int enemiesCount = 0;
     sf::Clock enemySpawnClock;
+
+    ParticleSystem bloodParticles;
 
     sf::Texture bulletTexture;
     if (!bulletTexture.loadFromFile("../model/assets/bullet.png")) {
@@ -109,12 +112,16 @@ int main() {
             enemy.update(player.getCenter(), deltaTime);
         }
 
+        // Update particles
+        bloodParticles.update(deltaTime);
+
         // Check for collisions
         for (auto bulletIt = bullets.begin(); bulletIt != bullets.end(); ) {
             bool bulletRemoved = false;
             for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ) {
                 if (bulletIt->getHitbox().intersects(enemyIt->getHitbox())) {
                     enemyIt->takeDamage(34.f);
+                    bloodParticles.spawn(enemyIt->getPosition(), 15);
 
                     // Remove bullet
                     bulletIt = bullets.erase(bulletIt);
@@ -151,6 +158,9 @@ int main() {
         for (auto& enemy : enemies) {
             enemy.draw(window);
         }
+
+        // Draw particles
+        bloodParticles.draw(window);
 
         // Draw elements
         player.draw(window);
