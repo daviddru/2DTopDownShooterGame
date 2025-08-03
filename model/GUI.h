@@ -17,6 +17,8 @@ private:
     sf::Text ammoText;
     sf::Text reloadText;
 
+    sf::Text controls;
+
 public:
     GUI();
 

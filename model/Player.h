@@ -36,6 +36,7 @@ public:
     void updateReload(float deltaTime);
     bool canShoot() const;
     void shoot();
+    void reload();
 
     sf::Vector2f getPosition() const;
     sf::Vector2f getCenter() const;

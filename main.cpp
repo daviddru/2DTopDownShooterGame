@@ -117,6 +117,11 @@ int main() {
             }
             player.updateReload(deltaTime);
 
+            // Reload button
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+                player.reload();
+            }
+
             // Update shooting
             if (player.canShoot() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 if (shootClock.getElapsedTime().asSeconds() > 0.4f) { // rate limit
@@ -145,12 +150,12 @@ int main() {
 
                 // Damage logic
                 sf::Vector2f enemyPos = enemy.getPosition();
-                sf::Vector2f playerPos = player.getPosition();
+                sf::Vector2f playerPos = player.getCenter();
                 float dist = std::hypot(enemyPos.x - playerPos.x, enemyPos.y - playerPos.y);
 
-                if (dist < 65.f) {
+                if (dist < 70.f) {
                     static sf::Clock damageClock;
-                    if (damageClock.getElapsedTime().asSeconds() > 1.f) {
+                    if (damageClock.getElapsedTime().asSeconds() > 0.7f) {
                         player.takeDamage(20);
                         damageClock.restart();
                     }

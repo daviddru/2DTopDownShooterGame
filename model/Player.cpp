@@ -108,6 +108,8 @@ bool Player::isAlive() const {
 
 void Player::reset() {
     currentHealth = maxHealth;
+    currentBullets = maxBullets;
+    reloading = false;
     sprite.setPosition(960.f, 540.f);
 }
 
@@ -136,6 +138,14 @@ void Player::shoot() {
         }
     }
 }
+
+void Player::reload() {
+    if (canShoot() && currentBullets < 12) {
+        reloading = true;
+        reloadTimer = 0.f;
+    }
+}
+
 
 void Player::updateReload(float deltaTime) {
     if (reloading) {
