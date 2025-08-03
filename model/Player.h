@@ -21,7 +21,7 @@ private:
 public:
     Player();
 
-    void handleInput(float deltaTime);
+    void handleInput(float deltaTime, const sf::RenderWindow& window);
     void draw(sf::RenderWindow &window);
     void update(sf::RenderWindow& window, float deltaTime);
     void takeDamage(int damage);

@@ -21,7 +21,7 @@ Player::Player() {
     speed = 300.f;
 }
 
-void Player::handleInput(float deltaTime) {
+void Player::handleInput(float deltaTime, const sf::RenderWindow& window) {
     sf::Vector2f movement(0.f, 0.f);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) movement.y -= 1;
@@ -29,12 +29,32 @@ void Player::handleInput(float deltaTime) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) movement.y += 1;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) movement.x += 1;
 
-    if (movement.x != 0.f && movement.y != 0.f) {
-        float len = std::sqrt(movement.x * movement.x + movement.y * movement.y);
-        movement /= len;
-    }
+    if (movement.x != 0.f || movement.y != 0.f) {
+        float length = std::sqrt(movement.x * movement.x + movement.y * movement.y);
+        if (length != 0.f) {
+            movement /= length;
+        }
 
-    sprite.move(movement * speed * deltaTime);
+        movement *= speed * deltaTime;
+
+        sf::Vector2f newPos = sprite.getPosition() + movement;
+        sf::FloatRect bounds = sprite.getGlobalBounds();
+        float halfWidth = bounds.width / 2.f;
+        float halfHeight = bounds.height / 2.f;
+
+        float winWidth = static_cast<float>(window.getSize().x);
+        float winHeight = static_cast<float>(window.getSize().y);
+
+        // Clamp X movement
+        if (newPos.x - halfWidth >= 0 && newPos.x + halfWidth <= winWidth) {
+            sprite.move(movement.x, 0.f);
+        }
+
+        // Clamp Y movement
+        if (newPos.y - halfHeight >= 0 && newPos.y + halfHeight <= winHeight) {
+            sprite.move(0.f, movement.y);
+        }
+    }
 }
 
 void Player::draw(sf::RenderWindow &window) {
@@ -46,7 +66,7 @@ sf::Vector2f Player::getPosition() const {
 }
 
 void Player::update(sf::RenderWindow& window, float deltaTime) {
-    handleInput(deltaTime);
+    handleInput(deltaTime, window);
 
     sf::Vector2f playerPos = sprite.getPosition();
 

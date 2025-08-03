@@ -33,9 +33,21 @@ void applyZombieSeparation(std::vector<Zombie>& zombies, float deltaTime) {
     }
 }
 
+void toggleFullscreen(sf::RenderWindow& window, bool& isFullscreen) {
+    if (isFullscreen) {
+        window.create(sf::VideoMode(1920, 1080), "Twin Stick Shooter", sf::Style::Default); // windowed mode
+    } else {
+        window.create(sf::VideoMode::getDesktopMode(), "Twin Stick Shooter", sf::Style::Fullscreen); // fullscreen
+    }
+
+    isFullscreen = !isFullscreen;
+    window.setFramerateLimit(60);
+}
+
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "Twin Stick Shooter");
+    bool isFullscreen = true;
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Twin Stick Shooter", sf::Style::Fullscreen);
     window.setFramerateLimit(60);
 
     GUI gui;
@@ -73,6 +85,9 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11)
+                toggleFullscreen(window, isFullscreen);
         }
 
         // Spawn enemies
