@@ -110,3 +110,40 @@ void Player::reset() {
     currentHealth = maxHealth;
     sprite.setPosition(960.f, 540.f);
 }
+
+bool Player::isReloading() const {
+    return reloading;
+}
+
+int Player::getCurrentBullets() const {
+    return currentBullets;
+}
+
+int Player::getMaxBullets() const {
+    return maxBullets;
+}
+
+bool Player::canShoot() const {
+    return !reloading && currentBullets > 0;
+}
+
+void Player::shoot() {
+    if (canShoot()) {
+        currentBullets--;
+        if (currentBullets == 0) {
+            reloading = true;
+            reloadTimer = 0.f;
+        }
+    }
+}
+
+void Player::updateReload(float deltaTime) {
+    if (reloading) {
+        reloadTimer += deltaTime;
+        if (reloadTimer > reloadTime) {
+            currentBullets = maxBullets;
+            reloading = false;
+            reloadTimer = 0.f;
+        }
+    }
+}

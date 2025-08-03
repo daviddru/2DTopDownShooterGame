@@ -107,16 +107,18 @@ int main() {
             }
 
             // Update GUI
-            gui.update(player.getHealth(), player.getMaxHealth());
+            gui.updateHealth(player.getHealth(), player.getMaxHealth());
+            gui.updateAmmo(player.getCurrentBullets(), player.getMaxBullets(), player.isReloading());
 
             // Update player
             player.update(window, deltaTime);
             if (!player.isAlive()) {
                 gameState = GameState::GameOver;
             }
+            player.updateReload(deltaTime);
 
             // Update shooting
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (player.canShoot() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 if (shootClock.getElapsedTime().asSeconds() > 0.4f) { // rate limit
                     sf::Vector2f playerPos = player.getPosition();
                     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
@@ -125,6 +127,7 @@ int main() {
                     float muzzleLength = 186.f/2;
                     sf::Vector2f bulletSpawn = playerPos + direction * (muzzleLength / std::sqrt(direction.x * direction.x + direction.y * direction.y));
 
+                    player.shoot();
                     bullets.emplace_back(bulletSpawn, direction, 800.f, bulletTexture);
                     SoundManager::getInstance().playSound("shoot");
                     shootClock.restart();

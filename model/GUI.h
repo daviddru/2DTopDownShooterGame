@@ -14,10 +14,14 @@ private:
     sf::Font font;
     sf::Text healthText;
 
+    sf::Text ammoText;
+    sf::Text reloadText;
+
 public:
     GUI();
 
-    void update(int currentHealth, int maxHealth);
+    void updateHealth(int currentHealth, int maxHealth);
+    void updateAmmo(int currentBullets, int maxBullets, bool reloading);
     void draw(sf::RenderWindow& window);
     void deathScreen(sf::RenderWindow& window);
 };

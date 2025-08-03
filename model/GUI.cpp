@@ -22,19 +22,43 @@ GUI::GUI() {
     healthText.setCharacterSize(14);
     healthText.setFillColor(sf::Color::White);
     healthText.setPosition(120.f, 12.f);
+
+    ammoText.setFont(font);
+    ammoText.setCharacterSize(20);
+    ammoText.setFillColor(sf::Color::White);
+    ammoText.setPosition(1700.f, 10.f);
+
+    reloadText.setFont(font);
+    reloadText.setCharacterSize(20);
+    reloadText.setFillColor(sf::Color::Red);
+    reloadText.setPosition(1700.f, 40.f);
 }
 
-void GUI::update(int currentHealth, int maxHealth) {
+void GUI::updateHealth(int currentHealth, int maxHealth) {
     float healthPercent = static_cast<float>(currentHealth) / maxHealth;
     healthBar.setSize(sf::Vector2f(300.f * healthPercent, 20.f));
 
     healthText.setString(std::to_string(currentHealth) + " / " + std::to_string(maxHealth));
 }
 
+void GUI::updateAmmo(int currentBullets, int maxBullets, bool reloading) {
+    ammoText.setString("Ammo: " + std::to_string(currentBullets) + " / " + std::to_string(maxBullets));
+
+    if (reloading) {
+        reloadText.setString("Reloading...");
+    } else {
+        reloadText.setString("");
+    }
+}
+
 void GUI::draw(sf::RenderWindow& window) {
     window.draw(healthBarBackground);
     window.draw(healthBar);
     window.draw(healthText);
+
+    window.draw(ammoText);
+    if (!reloadText.getString().isEmpty())
+        window.draw(reloadText);
 }
 
 void GUI::deathScreen(sf::RenderWindow& window) {
