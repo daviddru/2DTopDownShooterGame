@@ -93,6 +93,9 @@ int main() {
 
             if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F11)
                 toggleFullscreen(window, isFullscreen);
+
+            if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
+                player.toggleSprint();
         }
 
         if (gameState == GameState::Playing) {
@@ -123,7 +126,7 @@ int main() {
             }
 
             // Update shooting
-            if (player.canShoot() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if (window.hasFocus() && player.canShoot() && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
                 if (shootClock.getElapsedTime().asSeconds() > 0.4f) { // rate limit
                     sf::Vector2f playerPos = player.getPosition();
                     sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));

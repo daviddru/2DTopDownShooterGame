@@ -14,7 +14,7 @@ private:
     sf::Texture texture;
     sf::Sprite sprite;
 
-    float speed;
+    float speed = 150.f;
     int maxHealth = 100.f;
     int currentHealth = 100.f;
 
@@ -23,6 +23,10 @@ private:
     bool reloading = false;
     float reloadTime = 2.f;
     float reloadTimer = 0.f;
+
+    bool isSprinting = false;
+    float sprintSpeed = 300.f;
+
 
 public:
     Player();
@@ -37,6 +41,7 @@ public:
     bool canShoot() const;
     void shoot();
     void reload();
+    void toggleSprint();
 
     sf::Vector2f getPosition() const;
     sf::Vector2f getCenter() const;
@@ -47,6 +52,8 @@ public:
     int getCurrentBullets() const;
     int getMaxBullets() const;
     bool isReloading() const;
+
+    bool getSprinting() const;
 };
 
 

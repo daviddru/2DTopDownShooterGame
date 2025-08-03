@@ -17,7 +17,10 @@ private:
     sf::Text ammoText;
     sf::Text reloadText;
 
-    sf::Text controls;
+    struct {
+        sf::Text reload;
+        sf::Text sprint;
+    } controls;
 
 public:
     GUI();

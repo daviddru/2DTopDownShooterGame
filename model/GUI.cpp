@@ -33,11 +33,17 @@ GUI::GUI() {
     reloadText.setFillColor(sf::Color::Red);
     reloadText.setPosition(1700.f, 40.f);
 
-    controls.setFont(font);
-    controls.setCharacterSize(20);
-    controls.setFillColor(sf::Color::White);
-    controls.setPosition(1680.f, 1030.f);
-    controls.setString("R to manual reload");
+    controls.sprint.setFont(font);
+    controls.sprint.setCharacterSize(20);
+    controls.sprint.setFillColor(sf::Color::White);
+    controls.sprint.setPosition(1680.f, 1000.f);
+    controls.sprint.setString("LSHIFT to sprint");
+
+    controls.reload.setFont(font);
+    controls.reload.setCharacterSize(20);
+    controls.reload.setFillColor(sf::Color::White);
+    controls.reload.setPosition(1680.f, 1030.f);
+    controls.reload.setString("R to manual reload");
 }
 
 void GUI::updateHealth(int currentHealth, int maxHealth) {
@@ -66,7 +72,8 @@ void GUI::draw(sf::RenderWindow& window) {
     if (!reloadText.getString().isEmpty())
         window.draw(reloadText);
 
-    window.draw(controls);
+    window.draw(controls.sprint);
+    window.draw(controls.reload);
 }
 
 void GUI::deathScreen(sf::RenderWindow& window) {

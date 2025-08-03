@@ -17,8 +17,6 @@ Player::Player() {
     sprite.setScale(sf::Vector2f(0.5, 0.5));
     sprite.setOrigin(95.f, 152.f);  // Center origin for rotation
     sprite.setPosition(640.f, 360.f);
-
-    speed = 300.f;
 }
 
 void Player::handleInput(float deltaTime, const sf::RenderWindow& window) {
@@ -35,7 +33,12 @@ void Player::handleInput(float deltaTime, const sf::RenderWindow& window) {
             movement /= length;
         }
 
-        movement *= speed * deltaTime;
+        if (isSprinting) {
+            movement *= sprintSpeed * deltaTime;
+        }
+        else {
+            movement *= speed * deltaTime;
+        }
 
         sf::Vector2f newPos = sprite.getPosition() + movement;
         sf::FloatRect bounds = sprite.getGlobalBounds();
@@ -98,6 +101,7 @@ void Player::takeDamage(int damage) {
 int Player::getHealth() const {
     return currentHealth;
 }
+
 int Player::getMaxHealth() const {
     return maxHealth;
 }
@@ -146,6 +150,14 @@ void Player::reload() {
     }
 }
 
+void Player::toggleSprint() {
+    if (!isSprinting) {
+        isSprinting = true;
+    }
+    else {
+        isSprinting = false;
+    }
+}
 
 void Player::updateReload(float deltaTime) {
     if (reloading) {
@@ -156,4 +168,8 @@ void Player::updateReload(float deltaTime) {
             reloadTimer = 0.f;
         }
     }
+}
+
+bool Player::getSprinting() const {
+    return isSprinting;
 }
