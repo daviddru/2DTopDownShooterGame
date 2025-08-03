@@ -36,3 +36,34 @@ void GUI::draw(sf::RenderWindow& window) {
     window.draw(healthBar);
     window.draw(healthText);
 }
+
+void GUI::deathScreen(sf::RenderWindow& window) {
+    sf::Text gameOverText;
+    gameOverText.setFont(font);
+    gameOverText.setString("GAME OVER");
+    gameOverText.setCharacterSize(64);
+    gameOverText.setFillColor(sf::Color::Red);
+
+    sf::Text restartHint;
+    restartHint.setFont(font);
+    restartHint.setString("Press R to Restart");
+    restartHint.setCharacterSize(24);
+    restartHint.setFillColor(sf::Color::White);
+
+    float windowWidth = static_cast<float>(window.getSize().x);
+
+    // Center GAME OVER text
+    sf::FloatRect gameOverBounds = gameOverText.getLocalBounds();
+    gameOverText.setOrigin(gameOverBounds.left + gameOverBounds.width / 2.f, gameOverBounds.top + gameOverBounds.height / 2.f);
+    gameOverText.setPosition(windowWidth / 2.f, 500.f);
+
+    // Center restart hint text
+    sf::FloatRect restartHintBounds = restartHint.getLocalBounds();
+    restartHint.setOrigin(restartHintBounds.left + restartHintBounds.width / 2.f, restartHintBounds.top + restartHintBounds.height / 2.f);
+    restartHint.setPosition(windowWidth / 2.f, 550.f);
+
+    window.clear();
+    window.draw(gameOverText);
+    window.draw(restartHint);
+    window.display();
+}

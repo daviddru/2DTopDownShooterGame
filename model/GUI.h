@@ -19,6 +19,7 @@ public:
 
     void update(int currentHealth, int maxHealth);
     void draw(sf::RenderWindow& window);
+    void deathScreen(sf::RenderWindow& window);
 };
 
 

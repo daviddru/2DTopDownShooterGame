@@ -101,3 +101,12 @@ int Player::getHealth() const {
 int Player::getMaxHealth() const {
     return maxHealth;
 }
+
+bool Player::isAlive() const {
+    return currentHealth > 0;
+}
+
+void Player::reset() {
+    currentHealth = maxHealth;
+    sprite.setPosition(960.f, 540.f);
+}

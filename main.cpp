@@ -8,6 +8,10 @@
 #include <iostream>
 #include <cmath>
 
+enum class GameState {
+    Playing,
+    GameOver
+};
 
 void applyZombieSeparation(std::vector<Zombie>& zombies, float deltaTime) {
     float separationRadius = 50.f;
@@ -49,6 +53,7 @@ int main() {
     bool isFullscreen = true;
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Twin Stick Shooter", sf::Style::Fullscreen);
     window.setFramerateLimit(60);
+    GameState gameState = GameState::Playing;
 
     GUI gui;
 
@@ -90,124 +95,137 @@ int main() {
                 toggleFullscreen(window, isFullscreen);
         }
 
-        // Spawn enemies
-        if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
-            sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
-            if (enemiesCount < 20) {
-                enemies.emplace_back(spawnPos, enemyTexture);
-                enemiesCount++;
+        if (gameState == GameState::Playing) {
+            // Spawn enemies
+            if (enemySpawnClock.getElapsedTime().asSeconds() > 3.f) {
+                sf::Vector2f spawnPos(rand() % 1920, rand() % 1080);
+                if (enemiesCount < 20) {
+                    enemies.emplace_back(spawnPos, enemyTexture);
+                    enemiesCount++;
+                }
+                enemySpawnClock.restart();
             }
-            enemySpawnClock.restart();
-        }
 
-        // Update GUI
-        gui.update(player.getHealth(), player.getMaxHealth());
+            // Update GUI
+            gui.update(player.getHealth(), player.getMaxHealth());
 
-        // Update player
-        player.update(window, deltaTime);
-
-        // Update shooting
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if (shootClock.getElapsedTime().asSeconds() > 0.4f) { // rate limit
-                sf::Vector2f playerPos = player.getPosition();
-                sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-                sf::Vector2f direction = mousePos - playerPos;
-
-                float muzzleLength = 186.f/2;
-                sf::Vector2f bulletSpawn = playerPos + direction * (muzzleLength / std::sqrt(direction.x * direction.x + direction.y * direction.y));
-
-                bullets.emplace_back(bulletSpawn, direction, 800.f, bulletTexture);
-                SoundManager::getInstance().playSound("shoot");
-                shootClock.restart();
+            // Update player
+            player.update(window, deltaTime);
+            if (!player.isAlive()) {
+                gameState = GameState::GameOver;
             }
-        }
 
-        // Update bullets
-        for (auto& bullet : bullets) {
-            bullet.update(deltaTime);
-        }
+            // Update shooting
+            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+                if (shootClock.getElapsedTime().asSeconds() > 0.4f) { // rate limit
+                    sf::Vector2f playerPos = player.getPosition();
+                    sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+                    sf::Vector2f direction = mousePos - playerPos;
 
-        // Update enemies
-        for (auto& enemy : enemies) {
-            applyZombieSeparation(enemies, deltaTime);
+                    float muzzleLength = 186.f/2;
+                    sf::Vector2f bulletSpawn = playerPos + direction * (muzzleLength / std::sqrt(direction.x * direction.x + direction.y * direction.y));
 
-            // Damage logic
-            sf::Vector2f enemyPos = enemy.getPosition();
-            sf::Vector2f playerPos = player.getPosition();
-            float dist = std::hypot(enemyPos.x - playerPos.x, enemyPos.y - playerPos.y);
-
-            if (dist < 65.f) {
-                static sf::Clock damageClock;
-                if (damageClock.getElapsedTime().asSeconds() > 1.f) {
-                    player.takeDamage(20);
-                    damageClock.restart();
+                    bullets.emplace_back(bulletSpawn, direction, 800.f, bulletTexture);
+                    SoundManager::getInstance().playSound("shoot");
+                    shootClock.restart();
                 }
             }
 
-            enemy.update(player.getCenter(), deltaTime);
-        }
+            // Update bullets
+            for (auto& bullet : bullets) {
+                bullet.update(deltaTime);
+            }
 
-        // Update particles
-        bloodParticles.update(deltaTime);
+            // Update enemies
+            for (auto& enemy : enemies) {
+                applyZombieSeparation(enemies, deltaTime);
 
-        // Check for collisions
-        for (auto bulletIt = bullets.begin(); bulletIt != bullets.end(); ) {
-            bool bulletRemoved = false;
-            for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ) {
-                if (bulletIt->getHitbox().intersects(enemyIt->getHitbox())) {
-                    enemyIt->takeDamage(34.f);
-                    bloodParticles.spawn(enemyIt->getPosition(), 15);
+                // Damage logic
+                sf::Vector2f enemyPos = enemy.getPosition();
+                sf::Vector2f playerPos = player.getPosition();
+                float dist = std::hypot(enemyPos.x - playerPos.x, enemyPos.y - playerPos.y);
 
-                    // Remove bullet
-                    bulletIt = bullets.erase(bulletIt);
-                    bulletRemoved = true;
+                if (dist < 65.f) {
+                    static sf::Clock damageClock;
+                    if (damageClock.getElapsedTime().asSeconds() > 1.f) {
+                        player.takeDamage(20);
+                        damageClock.restart();
+                    }
+                }
 
-                    if (enemyIt->isDead()) {
-                        enemyIt = enemies.erase(enemyIt); // remove dead zombie
-                        enemiesCount--;
+                enemy.update(player.getCenter(), deltaTime);
+            }
+
+            // Update particles
+            bloodParticles.update(deltaTime);
+
+            // Check for collisions
+            for (auto bulletIt = bullets.begin(); bulletIt != bullets.end(); ) {
+                bool bulletRemoved = false;
+                for (auto enemyIt = enemies.begin(); enemyIt != enemies.end(); ) {
+                    if (bulletIt->getHitbox().intersects(enemyIt->getHitbox())) {
+                        enemyIt->takeDamage(34.f);
+                        bloodParticles.spawn(enemyIt->getPosition(), 15);
+
+                        // Remove bullet
+                        bulletIt = bullets.erase(bulletIt);
+                        bulletRemoved = true;
+
+                        if (enemyIt->isDead()) {
+                            enemyIt = enemies.erase(enemyIt); // remove dead zombie
+                            enemiesCount--;
+                        } else {
+                            ++enemyIt;
+                        }
                     } else {
                         ++enemyIt;
                     }
-                } else {
-                    ++enemyIt;
+                }
+                if (!bulletRemoved) {
+                    ++bulletIt;
                 }
             }
-            if (!bulletRemoved) {
-                ++bulletIt;
+
+            // Delete out of bound bullets
+            bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
+        [&](const Bullet& b) { return b.isOffScreen(window); }),
+        bullets.end());
+
+            window.clear(sf::Color::Black);
+
+            // Draw GUI
+            gui.draw(window);
+
+            // Draw bullets
+            for (auto& bullet : bullets) {
+                bullet.draw(window);
+            }
+
+            // Draw enemies
+            for (auto& enemy : enemies) {
+                enemy.draw(window);
+            }
+
+            // Draw particles
+            bloodParticles.draw(window);
+
+            // Draw elements
+            player.draw(window);
+
+            window.display();
+
+            SoundManager::getInstance().cleanup();
+        }
+        else if (gameState == GameState::GameOver) {
+            gui.deathScreen(window);
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+                player.reset();
+                enemies.clear();
+                bullets.clear();
+                gameState = GameState::Playing;
             }
         }
-
-        // Delete out of bound bullets
-        bullets.erase(std::remove_if(bullets.begin(), bullets.end(),
-    [&](const Bullet& b) { return b.isOffScreen(window); }),
-    bullets.end());
-
-        window.clear(sf::Color::Black);
-
-        // Draw GUI
-        gui.draw(window);
-
-        // Draw bullets
-        for (auto& bullet : bullets) {
-            bullet.draw(window);
-        }
-
-        // Draw enemies
-        for (auto& enemy : enemies) {
-            enemy.draw(window);
-        }
-
-        // Draw particles
-        bloodParticles.draw(window);
-
-        // Draw elements
-        player.draw(window);
-
-        window.display();
-
-        SoundManager::getInstance().cleanup();
     }
-
 
     return 0;
 }

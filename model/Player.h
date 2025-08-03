@@ -25,12 +25,14 @@ public:
     void draw(sf::RenderWindow &window);
     void update(sf::RenderWindow& window, float deltaTime);
     void takeDamage(int damage);
+    void reset();
 
 
     sf::Vector2f getPosition() const;
     sf::Vector2f getCenter() const;
     int getHealth() const;
     int getMaxHealth() const;
+    bool isAlive() const;
 };
 
 
