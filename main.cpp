@@ -112,13 +112,13 @@ int main() {
             // Update GUI
             gui.updateHealth(player.getHealth(), player.getMaxHealth());
             gui.updateAmmo(player.getCurrentBullets(), player.getMaxBullets(), player.isReloading());
+            gui.updateStamina(player.getStamina(), player.getMaxStamina());
 
             // Update player
             player.update(window, deltaTime);
             if (!player.isAlive()) {
                 gameState = GameState::GameOver;
             }
-            player.updateReload(deltaTime);
 
             // Reload button
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {

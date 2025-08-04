@@ -44,6 +44,14 @@ GUI::GUI() {
     controls.reload.setFillColor(sf::Color::White);
     controls.reload.setPosition(1680.f, 1030.f);
     controls.reload.setString("R to manual reload");
+
+    staminaBarBackground.setSize(sf::Vector2f(300.f, 5.f));
+    staminaBarBackground.setFillColor(sf::Color(50, 50, 50));
+    staminaBarBackground.setPosition(10.f, 31.f);
+
+    staminaBar.setSize(sf::Vector2f(300.f, 5.f));
+    staminaBar.setFillColor(sf::Color::Yellow);
+    staminaBar.setPosition(10.f, 31.f);
 }
 
 void GUI::updateHealth(int currentHealth, int maxHealth) {
@@ -63,6 +71,18 @@ void GUI::updateAmmo(int currentBullets, int maxBullets, bool reloading) {
     }
 }
 
+void GUI::updateStamina(float currentStamina, float maxStamina) {
+    float staminaPercent = currentStamina / maxStamina;
+    staminaBar.setSize(sf::Vector2f(300.f * staminaPercent, 5.f));
+    if (currentStamina < 25.f) {
+        staminaBar.setFillColor(sf::Color::Red);
+    }
+    else {
+        staminaBar.setFillColor(sf::Color::Yellow);
+    }
+}
+
+
 void GUI::draw(sf::RenderWindow& window) {
     window.draw(healthBarBackground);
     window.draw(healthBar);
@@ -74,6 +94,9 @@ void GUI::draw(sf::RenderWindow& window) {
 
     window.draw(controls.sprint);
     window.draw(controls.reload);
+
+    window.draw(staminaBarBackground);
+    window.draw(staminaBar);
 }
 
 void GUI::deathScreen(sf::RenderWindow& window) {

@@ -26,6 +26,10 @@ private:
 
     bool isSprinting = false;
     float sprintSpeed = 300.f;
+    float stamina = 100.f;
+    float maxStamina = 100.f;
+    float staminaRegenRate = 10.f;
+    float staminaDrainRate = 50.f;
 
 
 public:
@@ -42,6 +46,7 @@ public:
     void shoot();
     void reload();
     void toggleSprint();
+    void updateStamina(float deltaTime);
 
     sf::Vector2f getPosition() const;
     sf::Vector2f getCenter() const;
@@ -54,6 +59,8 @@ public:
     bool isReloading() const;
 
     bool getSprinting() const;
+    float getStamina() const;
+    float getMaxStamina() const;
 };
 
 

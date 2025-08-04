@@ -71,6 +71,9 @@ sf::Vector2f Player::getPosition() const {
 void Player::update(sf::RenderWindow& window, float deltaTime) {
     handleInput(deltaTime, window);
 
+    updateReload(deltaTime);
+    updateStamina(deltaTime);
+
     sf::Vector2f playerPos = sprite.getPosition();
 
     sf::Vector2i mousePixelPos = sf::Mouse::getPosition(window);
@@ -172,4 +175,25 @@ void Player::updateReload(float deltaTime) {
 
 bool Player::getSprinting() const {
     return isSprinting;
+}
+
+void Player::updateStamina(float deltaTime) {
+    if (isSprinting && stamina > 0.f) {
+        stamina -= staminaDrainRate * deltaTime;
+        if (stamina < 0.f) stamina = 0.f;
+    } else {
+        stamina += staminaRegenRate * deltaTime;
+        if (stamina > maxStamina) stamina = maxStamina;
+    }
+
+    if (stamina <= 0.f)
+        isSprinting = false;
+}
+
+float Player::getStamina() const {
+    return stamina;
+}
+
+float Player::getMaxStamina() const {
+    return maxStamina;
 }
