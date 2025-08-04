@@ -154,7 +154,7 @@ void Player::reload() {
 }
 
 void Player::toggleSprint() {
-    if (!isSprinting) {
+    if (!isSprinting && stamina > staminaThreshold) {
         isSprinting = true;
     }
     else {

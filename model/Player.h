@@ -25,11 +25,12 @@ private:
     float reloadTimer = 0.f;
 
     bool isSprinting = false;
-    float sprintSpeed = 300.f;
+    float sprintSpeed = 225.f;
     float stamina = 100.f;
     float maxStamina = 100.f;
     float staminaRegenRate = 10.f;
     float staminaDrainRate = 50.f;
+    float staminaThreshold = 25.f;
 
 
 public:
