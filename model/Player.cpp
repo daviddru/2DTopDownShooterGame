@@ -139,15 +139,11 @@ bool Player::canShoot() const {
 void Player::shoot() {
     if (canShoot()) {
         currentBullets--;
-        if (currentBullets == 0) {
-            reloading = true;
-            reloadTimer = 0.f;
-        }
     }
 }
 
 void Player::reload() {
-    if (canShoot() && currentBullets < 12) {
+    if (!reloading && currentBullets < 12) {
         reloading = true;
         reloadTimer = 0.f;
     }

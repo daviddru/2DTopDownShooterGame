@@ -21,7 +21,7 @@ private:
     int maxBullets = 12;
     int currentBullets = 12;
     bool reloading = false;
-    float reloadTime = 2.f;
+    float reloadTime = 4.f;
     float reloadTimer = 0.f;
 
     bool isSprinting = false;

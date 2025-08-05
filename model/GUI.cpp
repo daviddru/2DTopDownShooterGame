@@ -43,7 +43,7 @@ GUI::GUI() {
     controls.reload.setCharacterSize(20);
     controls.reload.setFillColor(sf::Color::White);
     controls.reload.setPosition(1680.f, 1030.f);
-    controls.reload.setString("R to manual reload");
+    controls.reload.setString("R to reload");
 
     staminaBarBackground.setSize(sf::Vector2f(300.f, 5.f));
     staminaBarBackground.setFillColor(sf::Color(50, 50, 50));
@@ -66,6 +66,8 @@ void GUI::updateAmmo(int currentBullets, int maxBullets, bool reloading) {
 
     if (reloading) {
         reloadText.setString("Reloading...");
+    } else if (currentBullets == 0) {
+        reloadText.setString("Press R to reload");
     } else {
         reloadText.setString("");
     }

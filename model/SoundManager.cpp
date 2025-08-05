@@ -16,6 +16,7 @@ void SoundManager::loadSound(const std::string& name, const std::string& filepat
         std::cerr << "Failed to load sound: " << filepath << "\n";
         return;
     }
+    std::cout << "Loaded sound: " << filepath << "\n";
     buffers[name] = buffer;
 }
 

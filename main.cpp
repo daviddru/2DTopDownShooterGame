@@ -82,6 +82,7 @@ int main() {
     }
 
     SoundManager::getInstance().loadSound("shoot", "../model/assets/sounds/shoot.wav");
+    SoundManager::getInstance().loadSound("reload", "../model/assets/sounds/reload.wav");
 
     while (window.isOpen()) {
         float deltaTime = clock.restart().asSeconds();
@@ -122,6 +123,8 @@ int main() {
 
             // Reload button
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+                if (!player.isReloading())
+                    SoundManager::getInstance().playSound("reload");
                 player.reload();
             }
 
@@ -204,9 +207,6 @@ int main() {
 
             window.clear(sf::Color::Black);
 
-            // Draw GUI
-            gui.draw(window);
-
             // Draw bullets
             for (auto& bullet : bullets) {
                 bullet.draw(window);
@@ -222,6 +222,9 @@ int main() {
 
             // Draw elements
             player.draw(window);
+
+            // Draw GUI
+            gui.draw(window);
 
             window.display();
 
