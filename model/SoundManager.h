@@ -11,18 +11,19 @@
 #include <memory>
 
 class SoundManager {
-private:
-    SoundManager() = default;
-
-    std::unordered_map<std::string, sf::SoundBuffer> buffers;
-    std::vector<sf::Sound> sounds; // Keep sounds alive while playing
-
 public:
     static SoundManager& getInstance();
 
     void loadSound(const std::string& name, const std::string& filepath);
     void playSound(const std::string& name);
-    void cleanup();
+
+private:
+    SoundManager();
+
+    std::unordered_map<std::string, sf::SoundBuffer> buffers;
+
+    std::unordered_map<std::string, std::vector<sf::Sound>> soundPool;
+    const size_t maxVoicesPerSound = 10;
 };
 
 

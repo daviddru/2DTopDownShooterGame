@@ -227,8 +227,6 @@ int main() {
             gui.draw(window);
 
             window.display();
-
-            SoundManager::getInstance().cleanup();
         }
         else if (gameState == GameState::GameOver) {
             gui.deathScreen(window);
